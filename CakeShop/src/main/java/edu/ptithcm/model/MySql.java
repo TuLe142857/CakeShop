@@ -1,7 +1,6 @@
 package edu.ptithcm.model;
 
 import java.sql.*;
-import java.util.Scanner;
 
 public class MySql{
     // Thong tin ket noi mac dinh
