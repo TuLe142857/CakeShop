@@ -1,12 +1,13 @@
 package edu.ptithcm.model.Data;
 
-import com.sun.source.tree.WhileLoopTree;
 import edu.ptithcm.model.MySql;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 
-
+/**
+ * @author Le Ngoc Tu
+ */
 public class User {
     public static void main (String []args){
         MySql.setDefaultPasswd("tule123");
@@ -28,6 +29,7 @@ public class User {
             e.printStackTrace();
         }
     }
+
     private int id;
     private String name;
     private String email;

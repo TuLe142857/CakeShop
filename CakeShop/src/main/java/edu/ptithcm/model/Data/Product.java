@@ -1,8 +1,30 @@
 package edu.ptithcm.model.Data;
 
+import edu.ptithcm.model.MySql;
+
+import java.sql.*;
 import java.time.LocalDateTime;
 
+/**
+ * @author Le Ngoc Tu
+ */
 public class Product{
+    public static void main(String []args){
+        MySql.setDefaultPasswd("tule123");
+        try(
+                Connection con = MySql.getConnection();
+                Statement stm = con.createStatement();
+                ResultSet r = stm.executeQuery("select * from products");
+                )
+        {
+            while(r.next()){
+                Product p = new Product(r);
+                System.out.println(p.toString());
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
     private int id;
     private int categoryID;
     private String name;
@@ -12,14 +34,28 @@ public class Product{
     private int discount;
     private String image_url;
     private boolean inBussiness;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public Product(ResultSet r) throws SQLException {
+        this.id = r.getInt("id");
+        this.categoryID = r.getInt("category_id");
+        this.name = r.getString("name");
+        this.description = r.getString("description");
+        this.price = r.getDouble("price");
+        this.quantity = r.getInt("quantity");
+        this.discount = r.getInt("discount");
+        this.image_url = r.getString("image_url");
+        this.inBussiness = r.getBoolean("status");
+        this.createdAt = r.getTimestamp("created_at").toLocalDateTime();
+        this.updatedAt = r.getTimestamp("updated_at").toLocalDateTime();
+    }
 
     public Product(int id, int categoryID, String name,
                    String description, double price, int quantity,
                    int discount, String image_url,
-                   boolean inBussiness, LocalDateTime createAt,
-                   LocalDateTime updateAt) {
+                   boolean inBussiness, LocalDateTime createdAt,
+                   LocalDateTime updatedAt) {
         this.id = id;
         this.categoryID = categoryID;
         this.name = name;
@@ -29,8 +65,8 @@ public class Product{
         this.discount = discount;
         this.image_url = image_url;
         this.inBussiness = inBussiness;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -105,20 +141,20 @@ public class Product{
         this.inBussiness = inBussiness;
     }
 
-    public LocalDateTime getCreateAt() {
-        return createAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -133,8 +169,8 @@ public class Product{
                 ", discount=" + discount +
                 ", image_url='" + image_url + '\'' +
                 ", inBussiness=" + inBussiness +
-                ", updateAt=" + updateAt +
-                ", createAt=" + createAt +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

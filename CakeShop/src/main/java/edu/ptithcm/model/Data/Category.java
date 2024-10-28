@@ -1,10 +1,38 @@
 package edu.ptithcm.model.Data;
 
+import edu.ptithcm.model.MySql;
+
+import java.sql.*;
+
+/**
+ * @author Le Ngoc Tu
+ */
 public class Category{
+    public static void main(String []args){
+        MySql.setDefaultPasswd("tule123");
+        try(
+                Connection con = MySql.getConnection();
+                Statement stm = con.createStatement();
+                ResultSet r = stm.executeQuery("select * from categories");
+                )
+        {
+            while (r.next()){
+                Category c = new Category(r);
+                System.out.println(c.toString());
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
     private int id;
     private String name;
     private String description;
 
+    public Category(ResultSet r) throws SQLException{
+        this.id = r.getInt("id");
+        this.name = r.getString("name");
+        this.description = r.getString("description");
+    }
     public Category(int id, String name, String description) {
         this.id = id;
         this.name = name;
@@ -33,5 +61,14 @@ public class Category{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
