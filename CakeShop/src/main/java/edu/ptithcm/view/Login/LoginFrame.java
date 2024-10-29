@@ -5,6 +5,7 @@ import edu.ptithcm.view.Window.SubWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Le Ngoc Tu
@@ -26,6 +27,7 @@ public class LoginFrame extends SubWindow {
 
     private JTextField inputLoginName;
     private JPasswordField inputPasswd;
+    private JCheckBox showPasswdCheckBox;
     private JButton loginButton;
     private JButton reigisterButton;
     private boolean permitRegister; //Co hien nut dang ky tai khoang khong
@@ -50,10 +52,12 @@ public class LoginFrame extends SubWindow {
         initRegisterButton();
         JPanel loginNamePanel = initLoginNamePanel();
         JPanel passwdPanel = initPasswdPanel();
+        JPanel showPasswdPanel = initShowPasswdPanel();
 
-        setLayout(new GridLayout(4, 1));
+        setLayout(new GridLayout(5, 1));
         add(loginNamePanel);
         add(passwdPanel);
+        add(showPasswdPanel);
         add(loginButton);
         add(reigisterButton);
 
@@ -133,5 +137,25 @@ public class LoginFrame extends SubWindow {
 
         return panel;
     }
+
+    private JPanel initShowPasswdPanel(){
+        showPasswdCheckBox = new JCheckBox("Hiện mật khẩu");
+        showPasswdCheckBox.addActionListener(new AbstractAction() {
+            private char echo = inputPasswd.getEchoChar();
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(showPasswdCheckBox.isSelected())
+                    inputPasswd.setEchoChar(echo);
+                else
+                    inputPasswd.setEchoChar((char)0);
+            }
+        });
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(1, 2));
+        panel.add(new JLabel());
+        panel.add(showPasswdCheckBox);
+        return panel;
+    }
+
 
 }
