@@ -14,9 +14,9 @@ public class CustomerProcess {
     public static String registerNewAccount(String name, String email, String password, String phone, String address)
             throws SQLException, DataAlreadyExistsException
     {
-        String queryCheckEmail = "SELECT * FROM users WHERE email = ? LIMIT 1";
-        String queryCheckPhone = "SELECT * FROM users WHERE phone = ? LIMIT 1";
-        String queryInsert = "INSERT INTO users (name, email, password, phone, address) VALUES (?, ?, ?, ?, ?)";
+        String queryCheckEmail = "SELECT * FROM Users WHERE email = ? LIMIT 1";
+        String queryCheckPhone = "SELECT * FROM Users WHERE phone = ? LIMIT 1";
+        String queryInsert = "INSERT INTO Users (name, email, password, phone, address) VALUES (?, ?, ?, ?, ?)";
 
         try(
                 Connection con = MySql.getConnection();

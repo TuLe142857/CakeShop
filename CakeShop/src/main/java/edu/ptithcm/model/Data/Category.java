@@ -13,7 +13,7 @@ public class Category{
         try(
                 Connection con = MySql.getConnection();
                 Statement stm = con.createStatement();
-                ResultSet r = stm.executeQuery("select * from categories");
+                ResultSet r = stm.executeQuery("select * from Categories");
                 )
         {
             while (r.next()){

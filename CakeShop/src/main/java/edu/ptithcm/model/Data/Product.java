@@ -14,7 +14,7 @@ public class Product{
         try(
                 Connection con = MySql.getConnection();
                 Statement stm = con.createStatement();
-                ResultSet r = stm.executeQuery("select * from products");
+                ResultSet r = stm.executeQuery("select * from Products");
                 )
         {
             while(r.next()){

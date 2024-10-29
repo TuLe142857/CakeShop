@@ -14,7 +14,7 @@ public class User {
         try(
                 Connection con = MySql.getConnection();
                 Statement stm = con.createStatement();
-                ResultSet r = stm.executeQuery("select * from users")
+                ResultSet r = stm.executeQuery("select * from Users")
                 )
         {
             System.out.println("Connected");

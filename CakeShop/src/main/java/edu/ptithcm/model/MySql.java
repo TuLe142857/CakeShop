@@ -5,7 +5,7 @@ import java.sql.*;
 public class MySql{
     // Thong tin ket noi mac dinh
     private static final String defaultURL = "jdbc:mysql://localhost:3306/";
-    private static final String defaultDBName = "cakeshop";
+    private static final String defaultDBName = "CakeShop";
     private static String defaultUserName = "root";
     private static String defaultPasswd = "";
 

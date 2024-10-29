@@ -21,7 +21,7 @@ public class CustomerFrame extends SubWindow{
         l.setPermitRegister(true);
         l.setChecker(
                 (u, p)->{
-                    String query = "select * from users where email = ? and password = ? limit 1";
+                    String query = "select * from Users where email = ? and password = ? limit 1";
                     try(Connection con = MySql.getConnection();
                         PreparedStatement stm = con.prepareStatement(query)
                     ) {
