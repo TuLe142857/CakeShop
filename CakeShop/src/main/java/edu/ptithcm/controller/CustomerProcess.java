@@ -5,8 +5,6 @@ import java.sql.*;
 import edu.ptithcm.model.Data.User;
 import edu.ptithcm.model.MySql;
 
-import javax.swing.*;
-
 public class CustomerProcess {
 
     public static boolean checkLogin(String email, String password){
