@@ -33,7 +33,7 @@ public class Product{
     private int quantity;
     private int discount;
     private String image_url;
-    private boolean inBussiness;
+    private boolean inBusiness;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -46,7 +46,7 @@ public class Product{
         this.quantity = r.getInt("quantity");
         this.discount = r.getInt("discount");
         this.image_url = r.getString("image_url");
-        this.inBussiness = r.getBoolean("status");
+        this.inBusiness = r.getBoolean("status");
         this.createdAt = r.getTimestamp("created_at").toLocalDateTime();
         this.updatedAt = r.getTimestamp("updated_at").toLocalDateTime();
     }
@@ -54,7 +54,7 @@ public class Product{
     public Product(int id, int categoryID, String name,
                    String description, double price, int quantity,
                    int discount, String image_url,
-                   boolean inBussiness, LocalDateTime createdAt,
+                   boolean inBusiness, LocalDateTime createdAt,
                    LocalDateTime updatedAt) {
         this.id = id;
         this.categoryID = categoryID;
@@ -64,7 +64,7 @@ public class Product{
         this.quantity = quantity;
         this.discount = discount;
         this.image_url = image_url;
-        this.inBussiness = inBussiness;
+        this.inBusiness = inBusiness;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -105,6 +105,13 @@ public class Product{
         return price;
     }
 
+    /**
+     * @return final price after discount
+     */
+    public double getFinalPrice(){
+        return price - (price*discount/100);
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
@@ -114,6 +121,8 @@ public class Product{
     }
 
     public void setQuantity(int quantity) {
+        if(quantity < 0)
+            throw new IllegalArgumentException("Can not set new quantity < 0");
         this.quantity = quantity;
     }
 
@@ -122,6 +131,8 @@ public class Product{
     }
 
     public void setDiscount(int discount) {
+        if(!(discount >= 0 && discount <= 100))
+            throw new IllegalArgumentException("product discount is between 0 and 100 (%)");
         this.discount = discount;
     }
 
@@ -133,12 +144,12 @@ public class Product{
         this.image_url = image_url;
     }
 
-    public boolean isInBussiness() {
-        return inBussiness;
+    public boolean isInBusiness() {
+        return inBusiness;
     }
 
-    public void setInBussiness(boolean inBussiness) {
-        this.inBussiness = inBussiness;
+    public void setInBusiness(boolean inBusiness) {
+        this.inBusiness = inBusiness;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -168,7 +179,7 @@ public class Product{
                 ", quantity=" + quantity +
                 ", discount=" + discount +
                 ", image_url='" + image_url + '\'' +
-                ", inBussiness=" + inBussiness +
+                ", inBusiness=" + inBusiness +
                 ", updatedAt=" + updatedAt +
                 ", createdAt=" + createdAt +
                 '}';

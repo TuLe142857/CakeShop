@@ -4,6 +4,10 @@ import edu.ptithcm.controller.*;
 import edu.ptithcm.view.Window.SubWindow;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.sql.*;
 
@@ -44,7 +48,7 @@ public class RegisterFrame extends SubWindow{
 
         initComponent();
         setLayoutAndAddComponent();
-        addLisenerForComponet();
+        addLisenerForComponent();
     }
 
     private void initComponent(){
@@ -67,6 +71,30 @@ public class RegisterFrame extends SubWindow{
         phoneLabel = new JLabel("Số điện thoại");
         phoneTextField = new JTextField();
 
+        //phone textFiled only access number
+        DocumentFilter numberOnlyFiler = new DocumentFilter(){
+            private boolean check(String s){
+                for(char c : s.toCharArray()){
+                    if(!(c >= '0' && c <= '9'))
+                        return false;
+                }
+                return true;
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if(check(text))
+                    super.replace(fb, offset, length, text, attrs);
+            }
+
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if(check(string))
+                    super.insertString(fb, offset, string, attr);
+            }
+        };
+        ( (AbstractDocument)phoneTextField.getDocument() ).setDocumentFilter(numberOnlyFiler);
+
         addressLabel = new JLabel("Địa chỉ");
         addressTextField = new JTextField();
 
@@ -86,7 +114,7 @@ public class RegisterFrame extends SubWindow{
         add(new JLabel());  add(registerButton);
     }
 
-    private void addLisenerForComponet(){
+    private void addLisenerForComponent(){
         showPasswdCheckBox.addActionListener(e->{
             if(showPasswdCheckBox.isSelected()){
                 passwordField_1.setEchoChar((char)0);
@@ -101,7 +129,26 @@ public class RegisterFrame extends SubWindow{
         registerButton.addActionListener(e->tryRegisterNewCustomer());
     }
 
+    /**
+     * <p>Try to register new user account</p>
+     * <p>If cannot register, do nothing</p>
+     * <p>If reigster success, dispose RegisterFrame and Show a dialog to comfirm auto login</p>
+     */
     private void tryRegisterNewCustomer(){
+
+        //check if any field is empty
+        String emptyField = findEmptyField();
+        if(emptyField != null){
+            JOptionPane.showMessageDialog(
+                    this,
+                    emptyField + " không được để trống",
+                    "Chú ý",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        //check passwd1 and passwd2 is equal
         String pass1 = new String(passwordField_1.getPassword());
         String pass2 = new String(passwordField_2.getPassword());
         if(pass1.compareTo(pass2) != 0){
@@ -143,13 +190,23 @@ public class RegisterFrame extends SubWindow{
             );
         }
         catch(SQLException e){
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "SQL Exception",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            e.printStackTrace();
+            HandelSQLException.showMessageAndCloseProgram(e);
         }
+    }
+
+    private String findEmptyField(){
+        if(emailTextField.getText().length() == 0)
+            return "Email";
+        if(passwordField_1.getPassword().length == 0)
+            return "Mật khẩu";
+        if(passwordField_2.getPassword().length == 0)
+            return "mật khẩu";
+        if(nameTextField.getText().length() == 0)
+            return "Tên";
+        if(addressTextField.getText().length() == 0)
+            return "Địa chỉ";
+        if(phoneTextField.getText().length() == 0)
+            return "Số điện thoại";
+        return null;
     }
 }
