@@ -16,7 +16,7 @@ public class ProductProcess {
      * @return
      */
     public static ArrayList<Product> selectByFilter(int category_id, boolean getAvailableOnly){
-        System.out.println("Select product " + category_id + getAvailableOnly);
+        System.out.println("Select product by category = " + category_id + " getAvailableOnly = " +  getAvailableOnly);
         String query = "";;
         if(getAvailableOnly)
             query = "SELECT * FROM Products WHERE category_id = ? AND status = TRUE AND quantity > 0";
@@ -42,7 +42,7 @@ public class ProductProcess {
     }
 
     public static ArrayList<Product> selectAllProductInBussiness(boolean getAvailableOnly){
-        System.out.println("Select all product in business");
+        System.out.println("Select all product in business, getAvailableOnly = " + getAvailableOnly);
         String query = "SELECT * FROM Products WHERE status = TRUE";
         if(getAvailableOnly)
             query += " AND quantity > 0";

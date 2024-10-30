@@ -4,103 +4,115 @@ import edu.ptithcm.controller.CategoryProcess;
 import edu.ptithcm.controller.ProductProcess;
 import edu.ptithcm.model.Data.Category;
 import edu.ptithcm.model.Data.Product;
-import edu.ptithcm.model.Data.User;
+import edu.ptithcm.model.MySql;
+import edu.ptithcm.util.DoSomething;
 import edu.ptithcm.util.WrapLayout;
+import edu.ptithcm.view.Window.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class CatalogView extends JPanel{
+public class ProductCatalogPanel extends JPanel{
+    public static void main(String []args){
+        MySql.setDefaultPasswd("tule123");
+        MainWindow view = new MainWindow();
+        view.setLayout(new BorderLayout());
+        view.add(new ProductCatalogPanel());
+        view.setVisible(true);
+    }
 
-    private FilterPanel filterBar;
+    private FilterPanel filterPanel;
     private ContentPanel contentPanel;
     private PaginationPanel paginationPanel;
+
     private static final int maxDisplayableProducts = 30;
+    private DoSomething doAfterClickToProduct = (product)->{/*Do nothing*/};
 
-    private User user;
-    public CatalogView(User user){
-        this.user = user;
+    public ProductCatalogPanel(){
+        add(new JLabel("product catalog"));
 
-        //INIT COMPONENT
-        filterBar = new FilterPanel();
-
+        filterPanel = new FilterPanel();
         contentPanel = new ContentPanel();
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
         paginationPanel = new PaginationPanel();
 
-        //ADD ACTION
-        setActionLisener();
+        JScrollPane scrollpane = new JScrollPane(contentPanel);
 
         setLayout(new BorderLayout());
-        add(filterBar, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        add(filterPanel, BorderLayout.NORTH);
+        add(scrollpane, BorderLayout.CENTER);
         add(paginationPanel, BorderLayout.SOUTH);
 
+        setFilterPanelLisener();
+        setPaginationPanelLisener();
         reloadData();
     }
 
-    /**
-     * Cap nhat du lieu tu database
-     */
+    public void setDoAfterClickToProduct(DoSomething doAfterClickToProduct) {
+        this.doAfterClickToProduct = doAfterClickToProduct;
+    }
+
     public void reloadData(){
-        filterBar.reload();
+        filterPanel.reload();
         int maxPage = 0;
         int count  = 0;
         do{
             maxPage ++ ;
             count += maxDisplayableProducts;
-        }while(count < filterBar.getTotalProductsFiltered());
+        }while(count < filterPanel.getTotalProductsFiltered());
         paginationPanel.setPageInfor(maxPage, 1);
-        contentPanel.display(filterBar.filter(), paginationPanel.getFirstProductIndexInPage());
+        contentPanel.display(filterPanel.filter(), paginationPanel.getFirstProductIndex());
     }
 
+    private void setFilterPanelLisener(){
 
-    private void setActionLisener(){
-        ActionListener action = (e)->{
-            System.out.println("refilter");
-            filterBar.filter();
+        ActionListener action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                filterPanel.filter();
 
-            int maxPage = 0;
-            int count  = 0;
-            do{
-                maxPage ++ ;
-                count += maxDisplayableProducts;
-            }while(count < filterBar.getTotalProductsFiltered());
-            paginationPanel.setPageInfor(maxPage, paginationPanel.currentPage);
+                int maxPage = 0;
+                int count  = 0;
+                do{
+                    maxPage ++ ;
+                    count += maxDisplayableProducts;
+                }while(count < filterPanel.getTotalProductsFiltered());
+                paginationPanel.setPageInfor(maxPage, 1);
 
-            contentPanel.display(filterBar.products, paginationPanel.getFirstProductIndexInPage());
+                contentPanel.display(filterPanel.products, paginationPanel.getFirstProductIndex());
+            }
         };
 
-        filterBar.categoriesComboBox.addActionListener(action);
-        filterBar.priorityComboBox.addActionListener(action);
-        filterBar.availableProductCheckBox.addActionListener(action);
-        filterBar.reloadButton.addActionListener(e->reloadData());
+        filterPanel.categoriesComboBox.addActionListener(action);
+        filterPanel.priorityComboBox.addActionListener(action);
+        filterPanel.availableProductCheckBox.addActionListener(action);
+        filterPanel.reloadButton.addActionListener(e->reloadData());
 
+    }
+
+    private void setPaginationPanelLisener(){
         paginationPanel.prevPageButton.addActionListener(e->{
             if(paginationPanel.canGotoPreviousPage()){
                 paginationPanel.toPrevPage();
-                contentPanel.display(filterBar.products, paginationPanel.getFirstProductIndexInPage());
+                contentPanel.display(filterPanel.products, paginationPanel.getFirstProductIndex());
             }
         });
 
         paginationPanel.nextPageButton.addActionListener(e->{
             if(paginationPanel.canGotoNextPage()){
                 paginationPanel.toNextPage();
-                contentPanel.display(filterBar.products, paginationPanel.getFirstProductIndexInPage());
+                contentPanel.display(filterPanel.products, paginationPanel.getFirstProductIndex());
             }
         });
     }
 
     private class FilterPanel extends JPanel{
 
-        private static final String PRIOR_LOW_PRICE = "Gia thap";
-        private static final String PRIOR_HIGH_PRICE = "Gia cao";
-        private static final String PRIOR_IS_SALING = "Dang giam gia";
+        private static final String LOW_PRICE = "Gia thap";
+        private static final String HIGH_PRICE = "Gia cao";
+        private static final String IS_SALING = "Dang giam gia";
 
         private static final Category SELECT_ALL_CATEGORY;
         static{
@@ -120,9 +132,9 @@ public class CatalogView extends JPanel{
 
             JLabel pLabel = new JLabel("Priority");
             pLabel.setHorizontalAlignment(JLabel.RIGHT);
-            priorityComboBox.addItem(PRIOR_LOW_PRICE);
-            priorityComboBox.addItem(PRIOR_HIGH_PRICE);
-            priorityComboBox.addItem(PRIOR_IS_SALING);
+            priorityComboBox.addItem(LOW_PRICE);
+            priorityComboBox.addItem(HIGH_PRICE);
+            priorityComboBox.addItem(IS_SALING);
 
             add(cLabel);    add(categoriesComboBox);
             add(pLabel);    add(priorityComboBox);
@@ -152,7 +164,6 @@ public class CatalogView extends JPanel{
 
         public ArrayList<Product> filter(){
             Category c = (Category) categoriesComboBox.getSelectedItem();
-
             //TH database empty
             if(c == null)
                 return null;
@@ -163,45 +174,25 @@ public class CatalogView extends JPanel{
                 products = ProductProcess.selectByFilter(c.getId(), availableProductCheckBox.isSelected());
             }
 
-            //SHORT
+            //SORT
             String priority = (String)priorityComboBox.getSelectedItem();
-            if(priority.compareTo(PRIOR_LOW_PRICE ) == 0){
-                products.sort((p1, p2)->{
-                    double cost1 = p1.getFinalPrice();
-                    double cost2 = p2.getFinalPrice();
-                    if(cost1 < cost2)
-                        return -1;
-                    if(cost1 > cost2)
-                        return 1;
-                    return 0;
-                });
-            }
-            else if(priority.compareTo(PRIOR_HIGH_PRICE) == 0){
-                products.sort((p1, p2)->{
-                    double cost1 = p1.getFinalPrice();
-                    double cost2 = p2.getFinalPrice();
-                    if(cost1 < cost2)
-                        return 1;
-                    if(cost1 > cost2)
-                        return -1;
-                    return 0;
-                });
-            }
-            else if(priority.compareTo(PRIOR_IS_SALING) == 0){
+            if(priority.compareTo(LOW_PRICE ) == 0)
+                products.sort((p1, p2)->Double.compare(p1.getFinalPrice(), p2.getFinalPrice()));
+            else if(priority.compareTo(HIGH_PRICE) == 0)
+                products.sort((p1, p2)->Double.compare(p2.getFinalPrice(), p1.getFinalPrice()));
+            else if(priority.compareTo(IS_SALING) == 0)
                 products.sort((p1, p2)->(p2.getDiscount() - p1.getDiscount()));
-            }
+
             return products;
         }
 
     }
-
     private class ContentPanel extends JPanel{
-        private ProductCard []productsDisplay = new ProductCard[maxDisplayableProducts];
+        private CustomProductCard []productsDisplay = new CustomProductCard[maxDisplayableProducts];
         public ContentPanel(){
             setLayout(new WrapLayout(FlowLayout.LEFT, 10, 10));
 
             for(int i = 0; i < maxDisplayableProducts; i++){
-//                productsDisplay[i] = new ProductCard();
                 productsDisplay[i] = new CustomProductCard();
                 productsDisplay[i].setBackground(Color.CYAN);
                 add(productsDisplay[i]);
@@ -210,13 +201,13 @@ public class CatalogView extends JPanel{
 
         public void display(ArrayList<Product> products, int startIndex){
             if(products == null){
-                System.out.println("Display products, total = 0");
+//                System.out.println("Display products, total = 0");
                 for(ProductCard p:productsDisplay)
                     p.setVisible(false);
                 return;
             }
 
-            System.out.printf("Display product, start index = %d(total Products in array = %d\n", startIndex, products.size());
+//            System.out.printf("Display product, start index = %d(total Products in array = %d\n", startIndex, products.size());
             for(int i = 0; i < maxDisplayableProducts; i++){
                 if(startIndex + i < products.size()){
                     productsDisplay[i].setProduct(products.get(i + startIndex));
@@ -243,7 +234,6 @@ public class CatalogView extends JPanel{
             add(prevPageButton);
             add(pageLabel);
             add(nextPageButton);
-
             setPageInfor(1, 1);
         }
 
@@ -257,11 +247,10 @@ public class CatalogView extends JPanel{
             this.totalPages = totalPages;
             this.currentPage = currentPage;
 
-            String textDisplay = "Page %d/%d";
-            pageLabel.setText(String.format(textDisplay, currentPage, totalPages));
+            pageLabel.setText(String.format("Page %d/%d", currentPage, totalPages));
         }
 
-        public int getFirstProductIndexInPage(){
+        public int getFirstProductIndex(){
             return (currentPage-1)*maxDisplayableProducts;
         }
 
@@ -291,7 +280,7 @@ public class CatalogView extends JPanel{
 
     private class CustomProductCard extends ProductCard{
         private JButton showDetailButton = new JButton("Xem chi tiết");
-        private int productID;
+        private Product product;
 
         public CustomProductCard() {
             super();
@@ -301,10 +290,7 @@ public class CatalogView extends JPanel{
             add(showDetailButton, gbc);
 
             showDetailButton.addActionListener(e->{
-                JOptionPane.showMessageDialog(null,
-                        "Chức năng này đang làm",
-                        "Chờ chút :))",
-                        JOptionPane.PLAIN_MESSAGE);
+                doAfterClickToProduct.doing(product);
             });
         }
 
@@ -316,14 +302,14 @@ public class CatalogView extends JPanel{
         @Override
         public void setProduct(Product product) {
             super.setProduct(product);
-            this.productID = product.getId();
+            this.product = product;
             String name = "<p style = 'color:black; font-size:15'>" +  product.getName()+"</p>";
 
             String price = "";
             if(product.getDiscount() > 0){
                 price = String.format(
-                        "<p style = 'color:red; font-size:15'>Sale <span style='color:#FF9999;font-size:15'><strike>%.01f </strike></span>%.01f</p>",
-                        product.getPrice(), product.getFinalPrice()
+                        "<p style = 'color:red; font-size:15'>Sale%d%% <span style='color:#FF9999;font-size:15'><strike>%.01f </strike></span>%.01f</p>",
+                        product.getDiscount(),product.getPrice(), product.getFinalPrice()
                 );
             }
             else{
