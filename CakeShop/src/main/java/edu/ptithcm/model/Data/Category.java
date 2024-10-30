@@ -63,12 +63,17 @@ public class Category{
         this.description = description;
     }
 
+    /**
+     * Không chỉnh hàm này vì có dùng JComboBox<Category> trong view.CustomerView.CatalogView
+     * @return
+     */
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+//        return "Category{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                '}';
+       return name;
     }
 }

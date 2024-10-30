@@ -26,6 +26,25 @@ public class CustomerProcess {
     }
 
     /**
+     * @return null neu email khong ton tai
+     */
+    public static User selectByEmail(String email){
+        String query = "SELECT * FROM Users WHERE email = ? LIMIT 1";
+        try(
+                Connection con = MySql.getConnection();
+                PreparedStatement stm = con.prepareStatement(query)
+        ){
+            stm.setObject(1, email);
+            ResultSet r = stm.executeQuery();
+            if(r.next())
+                return new User(r);
+        }catch (SQLException e){
+            HandelSQLException.showMessageAndCloseProgram(e);
+        }
+        return null;
+    }
+
+    /**
      * @author Le Ngoc Tu
      * @return <code>String new user's email</code>
      * @throws SQLException xử lý lệnh <code>SELECT</code>, <code>INSERT</code> lỗi thì mới gặp, hên xui :))
