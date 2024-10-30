@@ -22,6 +22,7 @@ public class ProductCard extends JPanel{
      */
     protected JLabel contentLabel;
 
+    protected Dimension imageSize = new Dimension(200, 200);
 
     public ProductCard(){
         imageLabel = new JLabel();
@@ -43,11 +44,19 @@ public class ProductCard extends JPanel{
 
     public ProductCard(Product product){
         this();
+        setProduct(product);
+    }
 
+    public Dimension getImageSize() {
+        return imageSize;
+    }
+
+    public void setImageSize(Dimension imageSize) {
+        this.imageSize = imageSize;
     }
 
     public void setProduct(Product product){
-        imageLabel.setIcon(ImageProcess.getImageIcon(ImageProcess.dirProductImage + product.getImage_url()));
+        imageLabel.setIcon(ImageProcess.getImageIcon(ImageProcess.dirProductImage + product.getImage_url(), imageSize.width, imageSize.height));
 
         String name = "<p style = 'color:black; font-size:15'>" +  product.getName()+"</p>";
 
