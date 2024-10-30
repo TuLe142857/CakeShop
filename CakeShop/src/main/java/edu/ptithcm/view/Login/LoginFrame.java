@@ -145,9 +145,9 @@ public class LoginFrame extends SubWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(showPasswdCheckBox.isSelected())
-                    inputPasswd.setEchoChar(echo);
-                else
                     inputPasswd.setEchoChar((char)0);
+                else
+                    inputPasswd.setEchoChar(echo);
             }
         });
         JPanel panel = new JPanel();
