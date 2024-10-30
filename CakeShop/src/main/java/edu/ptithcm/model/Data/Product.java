@@ -105,6 +105,13 @@ public class Product{
         return price;
     }
 
+    /**
+     * @return final price after discount
+     */
+    public double getFinalPrice(){
+        return price - (price*discount/100);
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
@@ -114,6 +121,8 @@ public class Product{
     }
 
     public void setQuantity(int quantity) {
+        if(quantity < 0)
+            throw new IllegalArgumentException("Can not set new quantity < 0");
         this.quantity = quantity;
     }
 
@@ -122,6 +131,8 @@ public class Product{
     }
 
     public void setDiscount(int discount) {
+        if(!(discount >= 0 && discount <= 100))
+            throw new IllegalArgumentException("product discount is between 0 and 100 (%)");
         this.discount = discount;
     }
 
