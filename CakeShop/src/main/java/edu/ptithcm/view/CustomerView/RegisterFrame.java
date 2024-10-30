@@ -190,13 +190,7 @@ public class RegisterFrame extends SubWindow{
             );
         }
         catch(SQLException e){
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "SQL Exception",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            e.printStackTrace();
+            HandelSQLException.showMessageAndCloseProgram(e);
         }
     }
 

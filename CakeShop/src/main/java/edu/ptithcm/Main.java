@@ -1,5 +1,6 @@
 package edu.ptithcm;
 
+import edu.ptithcm.controller.HandelSQLException;
 import edu.ptithcm.view.App;
 import edu.ptithcm.model.MySql;
 
@@ -35,9 +36,7 @@ public class Main {
         in.close();
         try(Connection con = MySql.getConnection()){}
         catch (SQLException e){
-            System.out.println("Ket noi toi data base that bai");
-            e.printStackTrace();
-            System.exit(555);
+            HandelSQLException.showMessageAndCloseProgram(e);
         }
     }
 
