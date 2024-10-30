@@ -5,7 +5,25 @@ import java.sql.*;
 import edu.ptithcm.model.Data.User;
 import edu.ptithcm.model.MySql;
 
+import javax.swing.*;
+
 public class CustomerProcess {
+
+    public static boolean checkLogin(String email, String password){
+        String query = "select * from Users where email = ? and password = ? limit 1";
+        try(Connection con = MySql.getConnection();
+            PreparedStatement stm = con.prepareStatement(query)
+        ) {
+            stm.setObject(1, email);
+            stm.setObject(2, password);
+            ResultSet r = stm.executeQuery();
+            return r.next();
+        }
+        catch(SQLException e){
+            HandelSQLException.showMessageAndCloseProgram(e);
+        }
+        return false;
+    }
 
     /**
      * @author Le Ngoc Tu
