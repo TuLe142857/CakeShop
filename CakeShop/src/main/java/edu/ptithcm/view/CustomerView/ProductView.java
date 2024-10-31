@@ -38,7 +38,7 @@ public class ProductView extends JPanel{
 
         //Set Interface DoingSomething
         productCatalogPanel.setDoAfterClickToProduct((product)->{
-            productDetailsPanel.setProductDisplay((Product) product);
+            productDetailsPanel.setProduct((Product) product);
             cardLayout.show(this, PRODUCT_DETAILS);
         });
 

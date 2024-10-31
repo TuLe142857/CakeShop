@@ -26,6 +26,25 @@ public class CustomerProcess {
     /**
      * @return null neu email khong ton tai
      */
+    public static User selectById(int id){
+        String query = "SELECT * FROM Users WHERE id = ? LIMIT 1";
+        try(
+                Connection con = MySql.getConnection();
+                PreparedStatement stm = con.prepareStatement(query)
+        ){
+            stm.setObject(1, id);
+            ResultSet r = stm.executeQuery();
+            if(r.next())
+                return new User(r);
+        }catch (SQLException e){
+            HandelSQLException.showMessageAndCloseProgram(e);
+        }
+        return null;
+    }
+
+    /**
+     * @return null neu email khong ton tai
+     */
     public static User selectByEmail(String email){
         String query = "SELECT * FROM Users WHERE email = ? LIMIT 1";
         try(
