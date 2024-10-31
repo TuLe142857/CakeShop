@@ -36,8 +36,17 @@ public class CartView extends JPanel{
 
 
     private class CartPanel extends JPanel{
-        
+        private JLabel priceLabel = new JLabel();
+        private JButton makeOrderButton = new JButton("make order");
+        private JPanel displayPanel;
+
     }
+
+    private class productDisplay extends JPanel{
+//        private JCheckBox
+    }
+
+
 
     
 }

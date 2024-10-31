@@ -113,8 +113,6 @@ public class ProductDetailsPanel extends JPanel{
                 System.out.println(text.getText());
                 add(text);
             }
-
-
         }
     }
 
