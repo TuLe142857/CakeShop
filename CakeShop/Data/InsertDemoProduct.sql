@@ -49,4 +49,4 @@ INSERT INTO Products (category_id, name, description, price, quantity, image_url
 INSERT INTO Products (category_id, name, description, price, quantity, discount, image_url) VALUES
 (4, 'DemoProductSuperSale1', 'Mô tả bánh: Sieu giam gia', 150000, 20,10,  'demoProduct.jpg'),
 (4, 'DemoProductSuperSale2', 'Mô tả bánh: Sieu giam gia', 150000, 20,20,  'demoProduct.jpg'),
-(4, 'DemoProductSuperSale2', 'Mô tả bánh: Sieu giam gia', 150000, 20,30,  'demoProduct.jpg');
+(4, 'DemoProductSuperSale3', 'Mô tả bánh: Sieu giam gia', 150000, 20,30,  'demoProduct.jpg');

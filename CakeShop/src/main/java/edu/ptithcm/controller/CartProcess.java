@@ -1,6 +1,7 @@
 package edu.ptithcm.controller;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import edu.ptithcm.model.MySql;
 import edu.ptithcm.model.Data.*;
@@ -113,4 +114,23 @@ public class CartProcess{
         }
     }
 
+    public static ArrayList<Cart> selectUserCart(int userID){
+        ArrayList<Cart> list = new ArrayList<>();
+        String query = "SELECT * FROM Carts WHERE user_id = ?";
+
+        try(
+            Connection con = MySql.getConnection();
+            PreparedStatement stm = con.prepareStatement(query)
+        ){
+            stm.setObject(1, userID);
+            ResultSet r = stm.executeQuery();
+            while(r.next()){
+                list.add(new Cart(r));
+            }
+        }catch(SQLException e){
+            HandelSQLException.showMessageAndCloseProgram(e);
+        }
+
+        return list;
+    }
 }
